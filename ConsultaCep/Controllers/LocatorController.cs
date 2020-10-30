@@ -9,6 +9,7 @@ using ConsultaCep.Models;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ConsultaCep.Controllers
 {
@@ -26,6 +27,31 @@ namespace ConsultaCep.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public JsonResult GetLocatorDB(string cep)
+        {
+            var result = _context.Locator.Where(x => x.cep == cep).SingleOrDefault();
+
+            if(result != null)
+            {
+                return Json(Url.Action("RetornoApi", "Locator", new Locator
+                {
+                    cep = result.cep,
+                    complemento = result.complemento,
+                    bairro = result.bairro,
+                    localidade = result.localidade,
+                    uf = result.uf,
+                    ibge = result.ibge,
+                    gia = result.gia,
+                    ddd = result.ddd,
+                    siafi = result.siafi
+                }));
+            }
+            else
+            {
+                return Json(Url.Action("Error", "Home"));
+            }
         }
 
         [HttpGet]
@@ -46,15 +72,15 @@ namespace ConsultaCep.Controllers
                     locator = JsonConvert.DeserializeObject<Locator>(locatorResponse);
 
                     return Json(Url.Action("RetornoApi", "Locator", new Locator {
-                        Cep = locator.Cep,
-                        Complemento = locator.Complemento,
-                        Bairro = locator.Bairro,
-                        Localidade = locator.Localidade,
-                        Uf = locator.Uf,
-                        Ibge = locator.Ibge,
-                        Gia = locator.Gia,
-                        Ddd = locator.Ddd,
-                        Siafi = locator.Siafi
+                        cep = locator.cep,
+                        complemento = locator.complemento,
+                        bairro = locator.bairro,
+                        localidade = locator.localidade,
+                        uf = locator.uf,
+                        ibge = locator.ibge,
+                        gia = locator.gia,
+                        ddd = locator.ddd,
+                        siafi = locator.siafi
                     }));
                 }
                 else
@@ -84,16 +110,25 @@ namespace ConsultaCep.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(locator);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var verify = _context.Locator.Where(x => x.cep == locator.cep).Count();
+
+                if(verify == 0)
+                {
+                    _context.Add(locator);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(ConsultaCep));
+                }
+                else
+                {
+                    return View("Error", "Home");
+                }
             }
             return View(locator);
         }
 
         private bool LocatorExists(int id)
         {
-            return _context.Locator.Any(e => e.Id == id);
+            return _context.Locator.Any(e => e.id == id);
         }
     }
 }

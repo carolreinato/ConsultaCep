@@ -6,7 +6,7 @@
 
 <h1>Consultar CEP</h1>
 
-<h4>Localizar</h4>
+<h4>Localizar WS</h4>
 <hr />
 
 <div class="row">
@@ -21,6 +21,21 @@
         <button onclick="CheckCep()" style="margin-top: 35px" ;>Consulta WS</button>
     </div>
 </div>
+<hr />
+
+<h4>Localizar na DataBase</h4>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label class="control-label">Digite o CEP conforme indicado no campo abaixo</label>
+            <input class="form-control" id="cepDB" placeholder="00000-000"/>
+            <span class="text-danger"></span>
+        </div>
+    </div>
+    <div>
+        <button onclick="CheckCepDB()" style="margin-top: 35px" ;>Consulta DB</button>
+    </div>
+</div>
 
 @section Scripts {
     <script>
@@ -29,6 +44,23 @@
                $.ajax({
                    type: "GET",
                    url: "@Url.Action("GetLocator", "Locator")",
+                   data: { cep: cep },
+                   dataType: 'json',
+                   contentType: "application/x-www-form-urlencoded",
+                   success: function (url) {
+                       window.location.href = url;
+                   },
+                   error: function (url) {
+                       window.location.href = url;
+                   }
+               })
+        }
+
+        function CheckCepDB() {
+            var cep = $("#cepDB").val();
+               $.ajax({
+                   type: "GET",
+                   url: "@Url.Action("GetLocatorDB", "Locator")",
                    data: { cep: cep },
                    dataType: 'json',
                    contentType: "application/x-www-form-urlencoded",
