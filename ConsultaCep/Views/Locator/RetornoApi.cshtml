@@ -1,0 +1,94 @@
+﻿@model ConsultaCep.Models.Locator
+
+@{
+    ViewData["Title"] = "RetornoApi";
+}
+
+<h1>Retorno da API</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="InsereDB">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Cep" class="control-label"></label>
+                <input asp-for="Cep" class="form-control" id="cep" />
+                <span asp-validation-for="Cep" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Complemento" class="control-label"></label>
+                <input asp-for="Complemento" class="form-control" id="complemento" />
+                <span asp-validation-for="Complemento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bairro" class="control-label"></label>
+                <input asp-for="Bairro" class="form-control" id="bairro" />
+                <span asp-validation-for="Bairro" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Localidade" class="control-label"></label>
+                <input asp-for="Localidade" class="form-control" id="localidade" />
+                <span asp-validation-for="Localidade" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Uf" class="control-label"></label>
+                <input asp-for="Uf" class="form-control" id="uf" />
+                <span asp-validation-for="Uf" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ibge" class="control-label"></label>
+                <input asp-for="Ibge" class="form-control" id="ibge" />
+                <span asp-validation-for="Ibge" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Gia" class="control-label"></label>
+                <input asp-for="Gia" class="form-control" id="gia" />
+                <span asp-validation-for="Gia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ddd" class="control-label"></label>
+                <input asp-for="Ddd" class="form-control" id="ddd" />
+                <span asp-validation-for="Ddd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Siafi" class="control-label"></label>
+                <input asp-for="Siafi" class="form-control" id="siafi" />
+                <span asp-validation-for="Siafi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function InsertCEP() {
+            debugger;
+            var mapeado = {};
+            mapeado.Cep = $("#cep").val();
+            mapeado.Complemento = $("#complemento").val();
+            mapeado.Bairro = $("#bairro").val();
+            mapeado.Localidade = $("#localidade").val();
+            mapeado.Uf = $("#uf").val();
+            mapeado.Ibge = $("#ibge").val();
+            mapeado.Gia = $("#gia").val();
+            mapeado.Ddd = $("#ddd").val();
+            mapeado.Siafi = $("#siafi").val();
+               $.ajax({
+                   type: "POST",
+                   url: "@Url.Action("InsereDB", "Locator")",
+                   data: { locator : mapeado },
+                   dataType: 'json',
+                   contentType: "application/x-www-form-urlencoded",
+                   success: function (url) {
+                       window.location.href = url;
+                   },
+                   error: function (url) {
+                       window.location.href = url;
+                   }
+               })
+           }
+    </script>
+}

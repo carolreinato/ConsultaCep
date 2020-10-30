@@ -1,0 +1,44 @@
+﻿@model ConsultaCep.Models.Locator
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Consultar CEP</h1>
+
+<h4>Localizar</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label class="control-label">Digite o CEP</label>
+            <input class="form-control" id="cep" />
+            <span class="text-danger"></span>
+        </div>
+    </div>
+    <div>
+        <button onclick="CheckCep()" style="margin-top: 35px" ;>Consulta WS</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+           function CheckCep() {
+               var cep = $("#cep").val();
+               $.ajax({
+                   type: "GET",
+                   url: "@Url.Action("GetLocator", "Locator")",
+                   data: { cep: cep },
+                   dataType: 'json',
+                   contentType: "application/x-www-form-urlencoded",
+                   success: function (url) {
+                       window.location.href = url;
+                   },
+                   error: function (url) {
+                       window.location.href = url;
+                   }
+               })
+           }
+    </script>
+}
